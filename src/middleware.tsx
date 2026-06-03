@@ -1,5 +1,4 @@
-// src/middleware.js (untuk Next.js 12.2+ dan App/Pages Router)
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const protectedRoutes = [
     '/dashboard',
@@ -7,33 +6,33 @@ const protectedRoutes = [
     '/dashboard/settings',
     '/forms',
     '/analytics',
-    '/table'
+    '/table',
+    '/workflow',
+    '/reports',
+    '/notifications'
 ];
 const publicRoutes = ['/login', '/register', '/forgot-password'];
 
-export function middleware(request: { nextUrl: { clone?: any; pathname?: any; }; cookies: { get: (arg0: string) => any; }; }) {
+export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    const isAuthenticated = request.cookies.get('session_token') ? true : false; // Ganti dengan logika cek token sesi Anda
+    const isAuthenticated = !!request.cookies.get('session_token');
 
-    // Jika pengguna tidak terautentikasi dan mencoba mengakses rute terlindungi
     if (!isAuthenticated && protectedRoutes.includes(pathname)) {
         const url = request.nextUrl.clone();
-        url.pathname = '/login'; // Arahkan ke halaman login
+        url.pathname = '/login';
         return NextResponse.redirect(url);
     }
 
-    // Jika pengguna sudah terautentikasi dan mencoba mengakses rute otorisasi (login/register)
     if (isAuthenticated && publicRoutes.includes(pathname)) {
         const url = request.nextUrl.clone();
-        url.pathname = '/'; // Arahkan ke dashboard
+        url.pathname = '/';
         return NextResponse.redirect(url);
     }
 
     return NextResponse.next();
 }
 
-// Konfigurasi matcher untuk middleware
-export const config = () => ({
+export const config = {
     matcher: [
         '/dashboard/:path*',
         '/login',
@@ -41,6 +40,9 @@ export const config = () => ({
         '/forgot-password',
         '/forms/:path*',
         '/analytics/:path*',
-        '/table/:path*'
-    ], // Terapkan middleware pada rute ini
-});
+        '/table/:path*',
+        '/workflow/:path*',
+        '/reports/:path*',
+        '/notifications/:path*'
+    ],
+};

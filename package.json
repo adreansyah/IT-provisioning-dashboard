@@ -6,6 +6,7 @@
     "set-env": "node config/script/setup-env.js",
     "dev": "next dev --port 5003",
     "dev:staging": "npm run set-env staging && next dev --port 5003",
+    "build": "next build",
     "build:staging": "npm run set-env staging && next build",
     "start:stagig": "npm run set-env staging && next start",
     "lint": "next lint"
