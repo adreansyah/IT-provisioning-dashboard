@@ -1,4 +1,4 @@
-import { Controller, useFormContext, FieldValues, FieldPath } from "react-hook-form";
+import { Controller, useFormContext, FieldValues } from "react-hook-form";
 import Select from "react-tailwindcss-select";
 import { get } from "lodash";
 import { ReactNode } from "react";
